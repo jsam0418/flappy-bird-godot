@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://FlappyBird/FlappyBird.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Main/Main.gd" type="Script" id=2]
+[ext_resource path="res://Pipes/Pipes.tscn" type="PackedScene" id=3]
+
+[node name="Main" type="Node"]
+script = ExtResource( 2 )
+pipes_scene = ExtResource( 3 )
+
+[node name="PipeTimer" type="Timer" parent="."]
+wait_time = 2.5
+
+[node name="StartingPosition" type="Position2D" parent="."]
+position = Vector2( 250, 300 )
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+
+[connection signal="timeout" from="PipeTimer" to="." method="_on_PipeTimer_timeout"]
+[connection signal="hit" from="Player" to="." method="_on_Player_hit"]
