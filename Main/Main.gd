@@ -7,6 +7,7 @@ export var pipe_count = 3
 var projectResolution
 var rand_generate = RandomNumberGenerator.new()
 var score = 0
+var lost : bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -14,6 +15,7 @@ func _ready():
 	projectResolution=get_viewport().size
 
 func start_game():
+	lost = false
 	$Music.play()
 	$Player.start($StartingPosition.position)
 	$Player.z_index = 1
@@ -34,6 +36,9 @@ func new_pipe(xPos = projectResolution.x+60):
 func _on_Player_hit():
 	# Stop the pipes moving
 	# stop spawning Pipes
+	if lost:
+		return
+	lost = true
 	$Music.stop()
 	$DeathSound.play()
 	get_tree().call_group("Pipes", "queue_free")
