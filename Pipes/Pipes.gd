@@ -1,8 +1,11 @@
 extends RigidBody2D
 signal left_screen
+signal score
 
 export var pipe_velocity = Vector2(-200,0)
 var start_bool = false
+var score_pose = 0
+var scored : bool = false
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -12,7 +15,8 @@ var start_bool = false
 func _ready():
 	hide()
 
-func start(pos):
+func start(pos, score_pose_):
+	score_pose = score_pose_
 	position = pos
 	start_bool = true
 	show()
@@ -21,6 +25,10 @@ func start(pos):
 func _process(delta):
 	if(start_bool):
 		position += pipe_velocity*delta
+		if !scored && position.x <= score_pose:
+			scored = true
+			emit_signal("score")
+		
 
 func _on_VisibilityNotifier2D_screen_exited():
 	emit_signal("left_screen")

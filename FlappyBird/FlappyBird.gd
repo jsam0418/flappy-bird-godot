@@ -3,7 +3,7 @@ signal hit
 signal dead
 
 # Declare member variables here. Examples:
-export var bounce_velocity = Vector2(0,-700)
+export var bounce_velocity = Vector2(0,-500)
 export var player_gravity = Vector2(0, 2000)
 var velocity = Vector2.ZERO
 var screen_size
@@ -11,9 +11,10 @@ var screen_size
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	screen_size = get_viewport_rect().size
-	hide()
+	reset()
 
 func start(pos):
+	set_process(true)
 	position = pos
 	show()
 	$CollisionShape2D.disabled = false
@@ -32,12 +33,18 @@ func _process(delta):
 
 func _on_VisibilityNotifier2D_screen_exited():
 	emit_signal("dead")
-	queue_free()
-	hide()
+	reset()
 
 
 func _on_FlappyBird_body_entered(body):
 	emit_signal("hit")
+	$CollisionShape2D.set_deferred("disabled", true)
 	$AnimatedSprite.stop()
 	$AnimatedSprite.play("Fall")
-	print("Body Entered!")
+	
+func reset():
+	set_process(false)
+	hide()
+	velocity = Vector2.ZERO
+	$AnimatedSprite.stop()
+	
